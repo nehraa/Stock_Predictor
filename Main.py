@@ -49,10 +49,10 @@ model.fit(X, y, epochs=20, batch_size=32)
 # Predict the next 5 days of stock prices
 last_sequence = data_scaled[-12:].reshape(1, 12, 1)  # Last 12 months for prediction
 
-# Store predictions for the next 5 days
+# Store predictions for the next 100 days
 predicted_prices = []
 
-for _ in range(5):
+for _ in range(100):
     pred_price = model.predict(last_sequence)
     predicted_prices.append(pred_price[0][0])
     last_sequence = np.append(last_sequence[:, 1:, :], pred_price.reshape(1, 1, 1), axis=1)
@@ -62,7 +62,7 @@ predicted_prices_rescaled = scaler.inverse_transform(np.array(predicted_prices).
 
 # Generate future dates for plotting
 last_date = df.index[-1]
-future_dates = pd.date_range(last_date, periods=6, freq='B')[1:]  # Next 5 trading days
+future_dates = pd.date_range(last_date, periods=101, freq='B')[1:]  # Next 5 trading days
 
 # Plotting
 plt.figure(figsize=(12,6))
@@ -74,7 +74,7 @@ plt.plot(df.index, scaler.inverse_transform(data_scaled), color='blue', label='A
 plt.plot(future_dates, predicted_prices_rescaled, color='red', label='Predicted Stock Price')
 
 # Customize the plot
-plt.title('Tesla Stock Price Prediction for the Next Week')
+plt.title('Tesla Stock Price Prediction for the Next 100 days')
 plt.xlabel('Date')
 plt.ylabel('Price (USD)')
 plt.legend()
